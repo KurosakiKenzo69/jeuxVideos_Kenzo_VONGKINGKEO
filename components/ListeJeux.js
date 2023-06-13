@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-const Filtre = () => {
-    const [selectedValue, setSelectedValue] = useState('Tous');
-    const [categories, setCategories] = useState([]);
+const ListeJeux = () => {
+    const [jeux, setJeux] = useState([]);
 
     useEffect(() => {
-        // Récupérer les données du JSON (remplacez cette partie par votre propre logique de récupération des données)
         const jsonData = [
             {
                 "name": "Medal of Honor",
@@ -71,56 +68,52 @@ const Filtre = () => {
             }
         ]
 
-        // Créer un tableau pour stocker les catégories uniques
-        const uniqueCategories = [];
 
-        // Parcourir le JSON et ajouter les catégories uniques au tableau
-        jsonData.forEach((item) => {
-            if (!uniqueCategories.includes(item.categorie)) {
-                uniqueCategories.push(item.categorie);
-            }
-        });
-
-        // Mettre à jour le tableau des catégories
-        setCategories(uniqueCategories);
+        setJeux(jsonData);
     }, []);
 
     return (
-        <View style={styles.filtre}>
-            <Text style={styles.filtreText}>Filtrer par</Text>
-            <Picker
-                style={styles.picker}
-                selectedValue={selectedValue}
-                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-            >
-                <Picker.Item label="Tous" value="Tous" />
-                {categories.map((category) => (
-                    <Picker.Item label={category} value={category} key={category} />
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                {jeux.map((jeu, index) => (
+                    <View key={index} style={styles.jeuItem}>
+                        <Text style={styles.jeuName}>{jeu.name}</Text>
+                        <Text style={styles.jeuPrice}>{jeu.price}</Text>
+                        <Text style={styles.jeuCategorie}>{jeu.categorie}</Text>
+                    </View>
                 ))}
-            </Picker>
+            </ScrollView>
         </View>
     );
 };
 
-    const styles = StyleSheet.create({
-        filtre: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: 10,
-            position: 'absolute',
-            top: 10,
-            left: 18,
-            marginTop: 10,
-        },
-        filtreText: {
-            fontSize: 15,
-            marginRight: 10,
-        },
-        picker: {
-            borderWidth: 1,
-            borderColor: 'black',
-            width: 145,
-        },
-    });
-
-export default Filtre;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+        maxHeight: '40%',
+        // marginBottom: 100,
+    },
+    scrollView: {
+        paddingBottom: 20,
+    },
+    jeuItem: {
+        marginBottom: 20,
+        backgroundColor: '#f2f2f2',
+        padding: 10,
+        borderRadius: 8,
+    },
+    jeuName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    jeuPrice: {
+        fontSize: 14,
+    },
+    jeuCategorie: {
+        fontSize: 14,
+        fontStyle: 'italic',
+    },
+});
+export default ListeJeux;
